@@ -9,11 +9,11 @@
 # @@Copyright        :  Copyright: (c) 2022 Jason Hempstead, Casjays Developments
 # @@Created          :  Sunday, Oct 02, 2022 18:31 EDT
 # @@File             :  install.sh
-# @@Description      :  
+# @@Description      :
 # @@Changelog        :  New script
 # @@TODO             :  Better documentation
-# @@Other            :  
-# @@Resource         :  
+# @@Other            :
+# @@Resource         :
 # @@Terminal App     :  no
 # @@sudo/root        :  no
 # @@Template         :  installers/dockermgr
@@ -120,7 +120,7 @@ SERVER_SSL_CRT="${SERVER_SSL_CRT:-$SERVER_SSL_DIR/certs/localhost.crt}"
 SERVER_SSL_KEY="${SERVER_SSL_KEY:-$SERVER_SSL_DIR/private/localhost.key}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup variables
-SERVER_IP="${CURRIP4:-127.0.0.1}"
+SERVER_IP="127.0.0.1"
 SERVER_LISTEN="${SERVER_LISTEN:-$SERVER_IP}"
 SERVER_DOMAIN="${SERVER_DOMAIN:-"$(hostname -d 2>/dev/null | grep '^' || echo local)"}"
 SERVER_HOST="${SERVER_HOST:-$APPNAME.$SERVER_DOMAIN}"
@@ -132,8 +132,8 @@ NGINX_HTTPS="${NGINX_HTTPS:-443}"
 NGINX_PORT="${NGINX_HTTPS:-$NGINX_HTTP}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Port Setup [ _INT is container port ] [ _EXT is docker ]
-SERVER_PORT_EXT="${SERVER_PORT_EXT:-}"
-SERVER_PORT_INT="${SERVER_PORT_INT:-}"
+SERVER_PORT_EXT="${SERVER_PORT_EXT:-19081}"
+SERVER_PORT_INT="${SERVER_PORT_INT:-5000}"
 SERVER_PORT_ADMIN_EXT="${SERVER_PORT_ADMIN_EXT:-}"
 SERVER_PORT_ADMIN_INT="${SERVER_PORT_ADMIN_INT:-}"
 SERVER_PORT_OTHER_EXT="${SERVER_PORT_OTHER_EXT:-}"
@@ -149,7 +149,7 @@ SERVER_MESSAGE_PASS=""
 SERVER_MESSAGE_POST=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # URL to container image [docker pull URL]
-HUB_URL="hello-world"
+HUB_URL="benbusby/whoogle-search"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # import global variables
 if [ -f "$APPDIR/env.sh" ] && [ ! -f "$DOCKERMGR_HOME/env/$APPNAME" ]; then
@@ -225,6 +225,12 @@ else
     --hostname "$SERVER_HOST" \
     --restart=always \
     --privileged \
+    -e WHOOGLE_CONFIG_THEME="${WHOOGLE_CONFIG_THEME:-dark}" \
+    -e WHOOGLE_CONFIG_TOR="${WHOOGLE_CONFIG_TOR:-1}" \
+    -e WHOOGLE_CONFIG_GET_ONLY="${WHOOGLE_CONFIG_GET_ONLY:-1}" \
+    -e WHOOGLE_CONFIG_VIEW_IMAGE="${WHOOGLE_CONFIG_VIEW_IMAGE:-1}" \
+    -e WHOOGLE_CONFIG_URL="${WHOOGLE_CONFIG_URL:-/}" \
+    -e WHOOGLE_CONFIG_SAFE="${WHOOGLE_CONFIG_SAFE:-0}" \
     -e TZ="$SERVER_TIMEZONE" \
     -v $LOCAL_DATA_DIR:/data:z \
     -v $LOCAL_CONFIG_DIR:/config:z \
